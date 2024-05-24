@@ -4,14 +4,16 @@ import {
   WebSocketGateway,
   WebSocketServer,
 } from '@nestjs/websockets';
+import { Server } from 'socket.io';
 
-@WebSocketGateway()
+@WebSocketGateway({ namespace: 'chat' })
 export class ChatGateWay {
   @WebSocketServer()
-  server;
+  server: Server;
 
   @SubscribeMessage('message')
   handleMessage(@MessageBody() message: string) {
     this.server.emit('message', message);
+    return message;
   }
 }
